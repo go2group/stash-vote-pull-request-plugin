@@ -1,0 +1,8 @@
+.aui-group > .aui-item.description-column {
+	padding-left: 40px;
+	width: 240px;
+}
+
+.header-hidden {
+	display: none;
+}

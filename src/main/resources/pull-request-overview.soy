@@ -1,0 +1,70 @@
+{namespace com.go2group.vote}
+
+/**
+ * @param count The count of votes in this PR.
+ * @param sum The sum of votes in this PR.
+ */
+{template .prOverviewPanel}
+    {call bitbucket.feature.pullRequest.relatedEntitiesWebPanel}
+        {param linkText: $count > 1 ? 'Votes (' + $sum + ')' : ($count == 1 ? 'Vote ('+ $sum + ')' : 'No Votes') /}
+        {param linkHref: '#' /}
+        {param iconClass: 'vote-icon' /}
+        {param count: $count /}
+        {param sum: $sum /}
+        {param extraClasses: 'go2group-votes-link'  /}
+    {/call}
+{/template}
+
+/**
+ * @param votes
+ * @param remove
+ */
+{template .voteList}
+	<table class="aui">
+		<thead>
+			<tr>
+				<th id="voter">Voter</th>
+				<th id="votedOn">Voted On</th>
+				<th id="voteValue">Vote Value</th>
+				<th>Operations</th>
+			</tr>
+		</thead>
+		<tbody>
+        {foreach $vote in $votes}
+				<tr>
+					<td>{$vote.author}</td>
+					<td>{$vote.created}</td>
+					<td>{$vote.text}</td>
+					{if $remove}
+						<td><a data-vote-id="{$vote.id}" href="#" class="remove">Remove</a></td>
+					{else}
+						<td></td>
+					{/if}
+				</tr>
+        {ifempty}
+				<tr>
+					<td colspan="4" style="text-align: center;">No Votes</td>
+				</tr>
+        {/foreach}
+		</tbody>
+	</table>
+{/template}
+
+/**
+ * @param levels
+ */
+{template .voteForm}
+	{if $levels != null}
+    <form class="aui" id="create-vote">
+        <label>Add vote</label>
+        &nbsp;
+        <select id="vote-text" name="vote-text">
+        {foreach $level in $levels}
+            <option value="{$level.id}" {$level.hasPerm} selected>{$level.id}</option>
+        {/foreach}
+        </select>
+        &nbsp;
+    	<button type="submit">Add</button>
+    </form>
+    {/if}
+{/template}

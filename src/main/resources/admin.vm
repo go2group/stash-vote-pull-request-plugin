@@ -1,0 +1,112 @@
+<html>
+<head>
+<style>
+table.zebra-style {font-family:"Lucida Sans Unicode", "Lucida Grande", Sans-Serif; text-align:left; margin-bottom:25px;} 
+table.zebra-style th { color: #444; font-size: 14px; font-weight: normal; padding: 10px 8px; } 
+table.zebra-style td {color: #777;padding: 8px; font-size:13px;} 
+table.zebra-style tr.odd {background:#f2f2f2;}
+table.box-style {font-family:"Lucida Sans Unicode", "Lucida Grande", Sans-Serif;font-size:12px;min-width:480px;text-align:left;border-collapse:collapse;margin-bottom:25px; } 
+table.box-style th {font-size:14px;font-weight:normal;background:#ccc;border-top:4px solid #ddd;border-bottom:1px solid #fff;color:#666666;padding:10px;} 
+table.box-style td {background:#f2f2f2;border-bottom:1px solid #fff;color:#999;border-top:1px solid transparent;padding:8px 10px;} 
+table.box-style tr:hover td {background:#eee;color:#444;}
+table.minimal-style { background: #FFFFFF; border-collapse: collapse; font-family: "Lucida Sans Unicode","Lucida Grande",Sans-Serif; font-size: 12px; text-align: left; min-width: 480px; margin-bottom:25px; } 
+table.minimal-style th { border-bottom: 2px solid #444; color: #666666; font-size: 14px; font-weight: normal; padding: 10px; } 
+table.minimal-style td { border-bottom: 1px solid #CCCCCC; color: #999; padding: 8px 10px; } 
+table.minimal-style tbody tr:hover td {color:#444;}
+</style>
+<title>Pull Request Voting Workflow Configuration</title>
+<meta name="decorator" content="atl.admin">
+<meta name="application-base-url" content="$applicationProperties.getBaseUrl()">
+$webResourceManager.requireResource("com.atlassian.auiplugin:aui-core")
+$webResourceManager.requireResource("com.go2group.stash.plugin.stash-vote-pull-request-plugin:resources")
+</head>
+<body>
+		<h1>Workflow Configuration</h1>
+		<input type="hidden" id="application-base-url" name="application-base-url" value="$applicationProperties.getBaseUrl()" />
+		<div class="aui-group">
+			<div class="aui-item">
+<script language="javascript">
+function addWorkflow() {
+    var plist = document.getElementById("projects").value.split(",");
+    var poptions = [];
+    for(var ii=0; ii< plist.length; ii++) {
+        if(plist[ii].length > 0) {
+            poptions.push('<option value="' + plist[ii] + '">' + plist[ii] + '</option>');
+        }
+    }
+    
+    var table = document.getElementById("workflows");
+    var rcnt = table.rows.length;
+    var row = table.insertRow(rcnt);
+    var cell0 = row.insertCell(0);
+						cell0.innerHTML = '<input type="text" class="text" id="wfname" name="wfname">';
+						cell0.width = "15%";
+    var cell1 = row.insertCell(1);
+						cell1.innerHTML = '<select multiple class="multi-select" name="wfproj" id="wfproj" class="multi-select">' + poptions.join('') + '</select>';
+						cell1.width = "15%";
+    var cell = row.insertCell(2);
+    cell.width = "60%";
+    cell.innerHTML='<table class="aui" width="100%" name="aworkflow" id="aworkflow"><tr><th>Voting level</th><th>Allowed Roles</th><th>Allowed Group/Users</th><th>Must have at least</th><th>Must not have at least</th></tr></table><br><br><input type="button" value="Add Level" class="button" onclick="addrow(this);">';
+						var cell = row.insertCell(3);
+						cell.width = "10%";
+						cell.innerHTML='';
+}
+
+function addrow(btn) {
+    console.log(btn);
+    console.log(btn.parentNode);
+    var table = btn.parentNode.getElementsByTagName("table")[0];
+    var rcnt = table.rows.length;
+    var row = table.insertRow(rcnt);
+    var cell0 = row.insertCell(0);
+    cell0.innerHTML = '<input type="number" class="text" name="wflevel" id="wflevel">';
+    var cell1 = row.insertCell(1);
+    cell1.innerHTML = '<select multiple class="multi-select" name="wfroles" id="wfroles"><option value="ADMIN">Administrator</option><option value="LICENSED_USER">Any licensed user</option><option value="PROJECT_ADMIN">Project administrator</option><option value="PROJECT_CREATE">Project creator</option><option value="PROJECT_READ">Read access</option><option value="PROJECT_VIEW">View access</option><option value="PROJECT_WRITE">Write access</option><option value="REPO_ADMIN">Repository administrator</option><option value="REPO_READ">Repository read access</option><option value="REPO_WRITE">Repository write access</option><option value="SYS_ADMIN">System administrator</option></select>';
+    var cell2 = row.insertCell(2);
+    cell2.innerHTML = '<input type="text" class="text" name="wfgroups" id="wfgroups">';
+    var cell3 = row.insertCell(3);
+    cell3.innerHTML = '<input type="number" class="text" name="wfmusthave" id="wfmusthave">';
+    var cell4 = row.insertCell(4);
+    cell4.innerHTML = '<input type="number" class="text" name="wfmustnothave" id="wfmustnothave">';
+}
+</script>
+<form id="admin" class="aui">
+    <table class="aui" name="workflows" id="workflows">
+		<thead>
+			<tr>
+				<th>Workflow Name <span id="header-wfname" class="aui-icon aui-icon-small aui-iconfont-workbox-empty"></span></th>
+				<th>Projects <span id="header-projects" class="aui-icon aui-icon-small aui-iconfont-workbox"></span></th>
+				<th>Voting Configuration <span id="header-config" class="aui-icon aui-icon-small aui-iconfont-configure"></span></th>
+				<th>Workflow Actions</th>
+			</tr>
+		</thead>
+    </table>
+    <input type="button" value="Add Workflow" class="button" onclick="addWorkflow();">
+    <br/>
+    <input type="submit" value="Save" class="button">
+    <input type="hidden" value="" id="projects"> 
+</form>
+			</div>
+		</div>
+		<div id="header-wfname-content" class="header-hidden">
+			<p>This is the name of the workflow.</p>
+		</div>
+		<div id="header-projects-content" class="header-hidden">
+			<p>These are the available proejects in your Stash instance.</p>
+			<p>Select (multiple) projects that you would like to associate to the workflow.</p> 
+		</div>
+		<div id="header-config-content" class="header-hidden">
+			<p>A Voting Configuration allows users to setup the voting levels and how many are required and how many are not supposed to appear.</p>
+			<h5>Voting Level</h5>
+			<p>Voting levels can be defined to allow options for users to vote against the Pull Request.</p>
+			<h5>Allowed Roles</h5>
+			<p>Only users with the selected roles (i.e. permissions) can vote on the Pull Request.</p>
+			<h5>Allowed Groups & Users</h5>
+			<p>Once you meet the permission above, groups and users defined in a semi-colon seperated string (e.g. stash-user;stash-developers;admin) can then use the voting level.</p>
+			<h5>Must have at least</h5>
+			<p>Defines how many of the Voting Level <b>must exist</b> before the Pull Request can be <b>merged</b></p>
+			<h5>Must not have at least</h5>
+			<p>Defines how many of the Voting Level <b>must not exist</b> before the Pull Request can be <b>merged</b></p>
+		</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<title>Gerrit Workflow Configuration</title>
+		<meta name="decorator" content="atl.admin">
+		$webResourceManager.requireResource("com.go2group.stash.plugin.stash-vote-pull-request-plugin:gerrit-scheme-resources")
+	</head>
+	<body>
+		<h1>Workflow Scheme Configuration</h1>
+		<input type="hidden" id="application-base-url" name="application-base-url" value="$applicationProperties.getBaseUrl()" />
+		<div class="aui-group">
+			<div class="aui-item">
+				<table class="aui paged-table user-table" id="workflows">
+					<thead>
+						<tr>
+							<th id="workflowName">Workflow Name</th>
+							<th id="projects">Projects</th>
+							<th>Operations</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="aui-item description-column">
+				<h4>Some Description</h4>
+			</div>
+		</div>
+	</body>
+</html>
